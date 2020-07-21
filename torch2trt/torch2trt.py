@@ -209,6 +209,10 @@ def attach_converter(ctx, method, converter, method_str):
         outputs = method(*args, **kwargs)
 
         if not skip:
+            for a in args:
+                if isinstance(a, torch.Tensor):
+                    assert  a.shape[1:] == a._trt.shape, 'a.shape: {}, a._trt.shape: {}'.format(a.shape, a._trt.shape)
+
             ctx.method_args = args
             ctx.method_kwargs = kwargs
             ctx.method_return = outputs
